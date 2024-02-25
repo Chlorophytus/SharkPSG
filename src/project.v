@@ -78,7 +78,7 @@ module tt_um_accelshark_psg (
         .rst_n(rst_n)
     );
     // Voice 1
-    tt_um_accelshark_psg_voice voice_0(
+    tt_um_accelshark_psg_voice voice_1(
         .mix_l(mix_l1),
         .mix_r(mix_r1),
 
@@ -93,7 +93,7 @@ module tt_um_accelshark_psg (
         .rst_n(rst_n)
     );
     // Voice 2
-    tt_um_accelshark_psg_voice voice_0(
+    tt_um_accelshark_psg_voice voice_2(
         .mix_l(mix_l2),
         .mix_r(mix_r2),
 
@@ -108,7 +108,7 @@ module tt_um_accelshark_psg (
         .rst_n(rst_n)
     );
     // Voice 3
-    tt_um_accelshark_psg_voice voice_0(
+    tt_um_accelshark_psg_voice voice_3(
         .mix_l(mix_l3),
         .mix_r(mix_r3),
 

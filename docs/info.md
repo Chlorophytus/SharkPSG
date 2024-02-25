@@ -9,7 +9,7 @@ You can also include images in this folder and reference them in the markdown. E
 
 ## How it works
 
-This is an 8-bit programmable sound generator that generates square waves.
+This is an 8-bit 4-voice programmable sound generator that generates square waves.
 
 ## External hardware
 
