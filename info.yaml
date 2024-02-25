@@ -22,7 +22,7 @@ pinout:
   # Inputs
   ui[0]: "strobe"
   ui[1]: "address"
-  ui[2]: "da_high"
+  ui[2]: "data_high"
   ui[3]: "da0"
   ui[4]: "da1"
   ui[5]: "da2"
