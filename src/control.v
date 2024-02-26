@@ -87,16 +87,12 @@ module tt_um_accelshark_psg_control (
     // ========================================================================
     // Out registers
     // ========================================================================
-    always @(*) begin
-        if(ena & !strobe) begin
-            voice0123_enable = r_voice0123_enable;
-            voice0123_octave = r_voice0123_octave;
-            voice0_pitch = r_voice0_pitch;
-            voice1_pitch = r_voice1_pitch;
-            voice2_pitch = r_voice2_pitch;
-            voice3_pitch = r_voice3_pitch;
-            voice01_volume = r_voice01_volume;
-            voice23_volume = r_voice23_volume;
-        end
-    end
+    assign voice0123_enable = r_voice0123_enable;
+    assign voice0123_octave = r_voice0123_octave;
+    assign voice0_pitch = r_voice0_pitch;
+    assign voice1_pitch = r_voice1_pitch;
+    assign voice2_pitch = r_voice2_pitch;
+    assign voice3_pitch = r_voice3_pitch;
+    assign voice01_volume = r_voice01_volume;
+    assign voice23_volume = r_voice23_volume;
 endmodule

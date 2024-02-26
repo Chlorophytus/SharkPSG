@@ -17,7 +17,7 @@ module tt_um_accelshark_psg_divider (
         if(!rst_n)
             r_clk_div <= 1'b1;
         else
-            r_clk_div <= !clk_div;
+            r_clk_div <= !r_clk_div;
     end
     assign clk_div = r_clk_div & ena;
 endmodule

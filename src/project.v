@@ -16,8 +16,8 @@ module tt_um_accelshark_psg (
     input  wire       clk,      // clock
     input  wire       rst_n     // reset_n - low to reset
 );
-    wire [7:0] mix_l;
-    wire [7:0] mix_r;
+    wire [15:0] mix_l;
+    wire [15:0] mix_r;
     wire [7:0] voice0123_enable;
     wire [7:0] voice0123_octave;
     wire [7:0] voice0_pitch;
@@ -31,10 +31,10 @@ module tt_um_accelshark_psg (
     // ========================================================================
     tt_um_accelshark_psg_control control(
         // Input signals
-        .strobe(ui[0]),
-        .address(ui[1]),
-        .data_high(ui[2]),
-        .da(ui[6:3]),
+        .strobe(ui_in[0]),
+        .address(ui_in[1]),
+        .data_high(ui_in[2]),
+        .da(ui_in[6:3]),
 
         // Control outputs
         .voice0123_enable(voice0123_enable),
@@ -54,14 +54,14 @@ module tt_um_accelshark_psg (
     // ========================================================================
     // Voices
     // ========================================================================
-    wire [4:0] mix_l0;
-    wire [4:0] mix_r0;
-    wire [4:0] mix_l1;
-    wire [4:0] mix_r1;
-    wire [4:0] mix_l2;
-    wire [4:0] mix_r2;
-    wire [4:0] mix_l3;
-    wire [4:0] mix_r3;
+    wire [15:0] mix_l0;
+    wire [15:0] mix_r0;
+    wire [15:0] mix_l1;
+    wire [15:0] mix_r1;
+    wire [15:0] mix_l2;
+    wire [15:0] mix_r2;
+    wire [15:0] mix_l3;
+    wire [15:0] mix_r3;
     // Voice 0
     tt_um_accelshark_psg_voice voice_0(
         .mix_l(mix_l0),
@@ -123,14 +123,8 @@ module tt_um_accelshark_psg (
         .rst_n(rst_n)
     );
     // Sum up voices
-    assign mix_l = {mix_l0[4], 2'b00, mix_l0[3:0], 1'b0} +
-                   {mix_l1[4], 2'b00, mix_l1[3:0], 1'b0} +
-                   {mix_l2[4], 2'b00, mix_l2[3:0], 1'b0} +
-                   {mix_l3[4], 2'b00, mix_l3[3:0], 1'b0};
-    assign mix_r = {mix_r0[4], 2'b00, mix_r0[3:0], 1'b0} +
-                   {mix_r1[4], 2'b00, mix_r1[3:0], 1'b0} +
-                   {mix_r2[4], 2'b00, mix_r2[3:0], 1'b0} +
-                   {mix_r3[4], 2'b00, mix_r3[3:0], 1'b0};
+    assign mix_l = (mix_l0 >>> 2) + (mix_l1 >>> 2) + (mix_l2 >>> 2) + (mix_l3 >>> 2);
+    assign mix_r = (mix_r0 >>> 2) + (mix_r1 >>> 2) + (mix_r2 >>> 2) + (mix_r3 >>> 2);
     // ========================================================================
     // I2S interfacing
     // ========================================================================

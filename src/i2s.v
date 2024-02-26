@@ -12,15 +12,15 @@ module tt_um_accelshark_psg_i2s (
     output wire       sclk,     // I2S Slave Clock
     output wire       sdata,    // I2S Serial Data
 
-    input wire  [7:0] mix_l,    // Mixed left-channel input to send to I2S DAC
-    input wire  [7:0] mix_r,    // Mixed right-channel input to send to I2S DAC
+    input wire  [15:0] mix_l,    // Mixed left-channel input to send to I2S DAC
+    input wire  [15:0] mix_r,    // Mixed right-channel input to send to I2S DAC
 
     input  wire       ena,      // will go high when the design is enabled
     input  wire       clk,      // clock
     input  wire       rst_n     // reset_n - low to reset
 );
     localparam DIVIDE_SCLK = 4;
-    localparam DIVIDE_SCLK_LRCK = 4;
+    localparam DIVIDE_SCLK_LRCK = 5;
     localparam DIVIDE_ALL = DIVIDE_SCLK + DIVIDE_SCLK_LRCK;
     // ========================================================================
     // Generate clock dividers
@@ -34,7 +34,7 @@ module tt_um_accelshark_psg_i2s (
                 .rst_n(rst_n),
                 .ena(ena),
                 .clk(divide_by[divide_i - 1]),
-                .clk_div(divide_by[divide_i]),
+                .clk_div(divide_by[divide_i])
             );
         end
     endgenerate
@@ -44,25 +44,25 @@ module tt_um_accelshark_psg_i2s (
     // ========================================================================
     // Mixing
     // ========================================================================
-    reg [7:0] r_mix_hold_l = 8'h00;
-    reg [7:0] r_mix_hold_r = 8'h00;
+    reg [16:0] r_mix_hold_l = 17'h00000;
+    reg [16:0] r_mix_hold_r = 17'h00000;
     // mix left
-    always @(posedge sclk or posedge lrck or negedge rst_n) begin
+    always @(posedge sclk or negedge rst_n) begin
         if(!rst_n)
-            r_mix_hold_l <= 8'h00;
+            r_mix_hold_l <= 17'h00000;
         else if(lrck)
-            r_mix_hold_l <= mix_l;
+            r_mix_hold_l <= {1'b0, mix_l};
         else
-            r_mix_hold_l <= r_mix_hold_l << 1;
+            r_mix_hold_l <= {r_mix_hold_l[15:0], 1'b0};
     end
     // mix right
-    always @(posedge sclk or negedge lrck or negedge rst_n) begin
+    always @(posedge sclk or negedge rst_n) begin
         if(!rst_n)
-            r_mix_hold_r <= 8'h00;
+            r_mix_hold_r <= 17'h00000;
         else if(!lrck)
-            r_mix_hold_r <= mix_r;
+            r_mix_hold_r <= {1'b0, mix_r};
         else
-            r_mix_hold_r <= r_mix_hold_r << 1;
+            r_mix_hold_r <= {r_mix_hold_r[15:0], 1'b0};
     end
-    assign sdata = (lrck ? r_mix_hold_r[7] : r_mix_hold_l[7]) & ena;
+    assign sdata = (lrck ? r_mix_hold_r[16] : r_mix_hold_l[16]) & ena;
 endmodule
